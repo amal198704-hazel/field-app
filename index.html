@@ -9,6 +9,7 @@
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
+
     <style>
         /* ----- RESET + MODERN BASE (ONLY STYLING, NO LOGIC CHANGES) ----- */
         * {
@@ -509,7 +510,38 @@
             document.getElementById("screen" + n).classList.add("active");
         }
 
+        /* START */
+        // window.onload = async () => {
+        //     const ok = await checkRequirements();
+        //     if (!ok) return;
+        //     showLoader("Getting location...");
+        //     navigator.geolocation.getCurrentPosition(async pos => {
+        //         lat = pos.coords.latitude;
+        //         lon = pos.coords.longitude;
 
+        //         try {
+        //             let res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+        //             let data = await res.json();
+        //             addressText = data.display_name;
+        //         } catch {
+        //             addressText = "Address not found";
+        //         }
+
+        //         document.getElementById("addressDisplay").innerText = addressText;
+        //         const addrPreview = document.getElementById("addressPreview");
+        //         if (addrPreview) addrPreview.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${addressText}`;
+
+        //         hideLoader();
+        //         switchScreen(2);
+        //     }, () => {
+        //         addressText = "Location denied";
+        //         document.getElementById("addressDisplay").innerText = addressText;
+        //         const addrPreview = document.getElementById("addressPreview");
+        //         if (addrPreview) addrPreview.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${addressText}`;
+        //         hideLoader();
+        //         switchScreen(2);
+        //     });
+        // };
         window.onload = () => {
 
             const block = document.getElementById("blockScreen");
@@ -720,7 +752,6 @@
             navigator.serviceWorker.register('sw.js');
         }
     </script>
-
 </body>
 
 </html>
