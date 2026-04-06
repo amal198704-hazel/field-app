@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Field App Pro | Clean Card Layout</title>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+
+    <style>
+        /* ----- RESET + MODERN BASE (ONLY STYLING, NO LOGIC CHANGES) ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: radial-gradient(circle at 10% 30%, #eef2f9, #e0e8f2);
+            padding: 16px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* main app container */
+        .app {
+            width: 100%;
+            max-width: 440px;
+            min-height: 80vh;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 40px;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.03);
+            padding: 22px 20px 28px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* screens transition */
+        .screen {
+            display: none;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* modern headings */
+        h3 {
+            font-size: 1.65rem;
+            font-weight: 650;
+            background: linear-gradient(115deg, #1F2B48, #1E3A6F);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid #2A7FFF;
+            padding-left: 16px;
+        }
+
+        h3 i {
+            background: linear-gradient(135deg, #2A7FFF, #00B4FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 1.6rem;
+        }
+
+        /* inputs & buttons */
+        input,
+        button {
+            width: 100%;
+            padding: 14px 20px;
+            margin-top: 14px;
+            border-radius: 40px;
+            border: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            outline: none;
+        }
+
+        input {
+            background: #F5F9FF;
+            border: 1.5px solid #E2EAF3;
+            color: #1C2E42;
+            font-weight: 500;
+        }
+
+        input:focus {
+            border-color: #2A7FFF;
+            background: white;
+            box-shadow: 0 4px 12px rgba(42, 127, 255, 0.12);
+        }
+
+        button {
+            background: linear-gradient(105deg, #1A56DB, #3B82F6);
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            box-shadow: 0 6px 14px rgba(59, 130, 246, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:active {
+            transform: scale(0.97);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:disabled {
+            background: linear-gradient(105deg, #b8c7e0, #cbdbe6);
+            box-shadow: none;
+            transform: none;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* address preview card */
+        #addressPreview {
+            background: #F0F6FE;
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin-top: 22px;
+            border-left: 4px solid #2A7FFF;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1A2B4C;
+            word-break: break-word;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #addressPreview i {
+            color: #2A7FFF;
+        }
+
+        /* location display screen1 */
+        #addressDisplay {
+            background: #F0F6FE;
+            border-radius: 28px;
+            padding: 18px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 20px;
+            border-left: 4px solid #2A7FFF;
+            color: #1E2F47;
+            line-height: 1.4;
+        }
+
+        /* capture area stylish */
+        .capture-modern {
+            background: #F8FBFE;
+            border-radius: 36px;
+            padding: 28px 20px;
+            text-align: center;
+            margin-top: 18px;
+            border: 2px dashed #cbdde9;
+            transition: 0.2s;
+        }
+
+        .capture-modern label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+        }
+
+        .capture-modern i {
+            font-size: 52px;
+            background: linear-gradient(145deg, #1E3A8A, #3B82F6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .capture-modern span {
+            font-weight: 600;
+            color: #2A5C9E;
+            background: #EAF2FF;
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+
+        #cameraInput {
+            display: none;
+        }
+
+        /* ========== FINAL CARD: IMAGE ON TOP, TEXT SEPARATE UNDERNEATH ========== */
+        #finalCard {
+            max-width: 100%;
+            margin: 16px 0 20px;
+            border-radius: 1px;
+            overflow: hidden;
+            background: #FFFFFF;
+            box-shadow: 0 18px 32px -12px rgba(0, 0, 0, 0.25);
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Image section - full width on top, no text overlay */
+        #photoPreview {
+            width: 100%;
+            display: block;
+            /*aspect-ratio: 4 / 3;
+    object-fit: cover;*/
+            background: #eef2f5;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Info box - clean separate panel under the image, NOT overlapping */
+        #infoBox {
+            background: linear-gradient(115deg, #0B1C30, #112A44);
+            color: #F1F9FF;
+            padding: 20px 18px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Each info row as clean separated block */
+        .info-row {
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            padding-bottom: 10px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .icon {
+            width: 28px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #5DC9FF;
+            margin-right: 6px;
+        }
+
+        /* button group double */
+        .button-group {
+            display: flex;
+            gap: 14px;
+            margin-top: 12px;
+        }
+
+        .button-group button {
+            flex: 1;
+            margin-top: 0;
+        }
+
+        /* loader modern glass */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 25, 45, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 999;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.25);
+            border-top: 4px solid #4BC0FF;
+            border-radius: 50%;
+            animation: spin 0.9s ease infinite;
+            box-shadow: 0 0 12px rgba(75, 192, 255, 0.4);
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loader p {
+            color: white;
+            margin-top: 20px;
+            font-weight: 500;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 6px 20px;
+            border-radius: 60px;
+            backdrop-filter: blur(2px);
+        }
+
+        /* toast */
+        #toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F2A3E;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: none;
+            z-index: 1100;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px);
+            background: rgba(28, 40, 58, 0.96);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        /* small decorative */
+        .status-note {
+            background: #EFF4FC;
+            border-radius: 28px;
+            padding: 8px 14px;
+            font-size: 0.75rem;
+            margin-top: 18px;
+            text-align: center;
+            color: #2C3E66;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* preserve all original functionality */
+    </style>
+</head>
+
+<body>
+    <div id="blockScreen" style="
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:#0f172a;
+    color:#fff;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    z-index:9999;
+    text-align:center;
+    padding:20px;
+">
+        <h2 id="blockMsg">Checking...</h2>
+
+        <button onclick="location.reload()" style="
+        margin-top:20px;
+        padding:12px 20px;
+        border:none;
+        border-radius:30px;
+        background:#3b82f6;
+        color:#fff;
+        font-size:16px;
+    ">
+            🔄 Reload
+        </button>
+    </div>
+    <div id="app" class="app">
+
+        <!-- SCREEN 1: Location (original ID structure) -->
+        <div id="screen1" class="screen active">
+            <h3><i class="fa-solid fa-location-crosshairs"></i> Getting location...</h3>
+            <p id="addressDisplay">Fetching address...</p>
+        </div>
+
+        <!-- SCREEN 2: Enter Details -->
+        <div id="screen2" class="screen">
+            <h3><i class="fa-solid fa-pen"></i> Enter Details</h3>
+
+            <input id="userName" placeholder="Enter Name">
+            <input id="wardInput" placeholder="Enter Ward">
+
+            <button id="nextBtn" disabled>
+                <i class="fa-solid fa-arrow-right"></i> Next
+            </button>
+
+            <div id="addressPreview" style="margin-top: 20px;"></div>
+        </div>
+
+        <!-- SCREEN 3: Capture -->
+        <div id="screen3" class="screen">
+            <h3><i class="fa-solid fa-camera"></i> Capture</h3>
+            <div class="capture-modern">
+                <label for="cameraInput">
+                    <i class="fa-regular fa-images"></i>
+                    <span><i class="fa-solid fa-camera-retro"></i> Take photo</span>
+                </label>
+                <input type="file" accept="image/*" capture="environment" id="cameraInput">
+            </div>
+        </div>
+
+        <!-- SCREEN 4: Result - Image above, text content clearly separated below -->
+        <div id="screen4" class="screen">
+            <h3><i class="fa-solid fa-check-circle"></i> Result</h3>
+
+            <div id="finalCard">
+                <!-- Image section (top, no text overlay) -->
+                <img id="photoPreview" />
+                <!-- Text information section (separate, under the image) -->
+                <div id="infoBox">
+                    <div class="info-row" id="timeText"></div>
+                    <div class="info-row" id="nameText"></div>
+                    <div class="info-row" id="wardText"></div>
+                    <div class="info-row" id="addressText"></div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button id="downloadBtn" disabled>
+                    <i class="fa-solid fa-download"></i> Download
+                </button>
+                <button id="shareBtn" disabled>
+                    <i class="fa-brands fa-whatsapp"></i> Share
+                </button>
+            </div>
+        </div>
+
+        <!-- LOADER -->
+        <div id="loader">
+            <div class="spinner"></div>
+            <p id="loaderText">Processing...</p>
+        </div>
+
+        <!-- TOAST -->
+        <div id="toast"></div>
+    </div>
+
+    <script>
+        let finalImageData = "", addressText = "", lat, lon;
+
+        /* ELEMENTS */
+        const userNameInput = document.getElementById("userName");
+        const wardInput = document.getElementById("wardInput");
+        const nextBtn = document.getElementById("nextBtn");
+        const cameraInput = document.getElementById("cameraInput");
+        const photoPreview = document.getElementById("photoPreview");
+        function checkRequirements() {
+            const block = document.getElementById("blockScreen");
+            const msg = document.getElementById("blockMsg");
+
+            // ❌ Internet check
+            if (!navigator.onLine) {
+                block.style.display = "flex";
+                msg.innerHTML = "📶 Please enable mobile data";
+                return false;
+            }
+
+            // ✅ DO NOT trigger location again here
+            block.style.display = "none";
+            return true;
+        }
+
+        /* LOADER */
+        function showLoader(t = "Processing...") {
+            document.getElementById("loaderText").innerText = t;
+            document.getElementById("loader").style.display = "flex";
+        }
+        function hideLoader() { document.getElementById("loader").style.display = "none"; }
+
+        /* TOAST */
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.style.display = "block";
+            setTimeout(() => toast.style.display = "none", 2500);
+        }
+
+        /* SCREEN SWITCH */
+        function switchScreen(n) {
+            document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+            document.getElementById("screen" + n).classList.add("active");
+        }
+
+        /* START */
+        // window.onload = async () => {
+        //     const ok = await checkRequirements();
+        //     if (!ok) return;
+        //     showLoader("Getting location...");
+        //     navigator.geolocation.getCurrentPosition(async pos => {
+        //         lat = pos.coords.latitude;
+        //         lon = pos.coords.longitude;
+
+        //         try {
+        //             let res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+        //             let data = await res.json();
+        //             addressText = data.display_name;
+        //         } catch {
+        //             addressText = "Address not found";
+        //         }
+
+        //         document.getElementById("addressDisplay").innerText = addressText;
+        //         const addrPreview = document.getElementById("addressPreview");
+        //         if (addrPreview) addrPreview.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${addressText}`;
+
+        //         hideLoader();
+        //         switchScreen(2);
+        //     }, () => {
+        //         addressText = "Location denied";
+        //         document.getElementById("addressDisplay").innerText = addressText;
+        //         const addrPreview = document.getElementById("addressPreview");
+        //         if (addrPreview) addrPreview.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${addressText}`;
+        //         hideLoader();
+        //         switchScreen(2);
+        //     });
+        // };
+        window.onload = () => {
+
+            const block = document.getElementById("blockScreen");
+            const msg = document.getElementById("blockMsg");
+
+            // ❌ Internet check
+            if (!navigator.onLine) {
+                block.style.display = "flex";
+                msg.innerHTML = "📶 Please enable mobile data";
+                return;
+            }
+
+            // 🔄 Check location
+            showLoader("Getting location...");
+
+            navigator.geolocation.getCurrentPosition(async pos => {
+
+                lat = pos.coords.latitude;
+                lon = pos.coords.longitude;
+
+                try {
+                    let res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                    let data = await res.json();
+                    addressText = data.display_name;
+                } catch {
+                    addressText = "Address not found";
+                }
+
+                document.getElementById("addressDisplay").innerText = addressText;
+
+                const addrPreview = document.getElementById("addressPreview");
+                if (addrPreview) {
+                    addrPreview.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${addressText}`;
+                }
+
+                hideLoader();
+                switchScreen(2);
+
+            }, () => {
+                // ❌ BLOCK APP if location disabled
+                hideLoader();
+                block.style.display = "flex";
+                msg.innerHTML = "📍 Please enable location and reload";
+            });
+        };
+        /* FORM VALIDATION */
+        function checkForm() {
+            nextBtn.disabled = !(userNameInput.value.trim() && wardInput.value.trim());
+        }
+        userNameInput.addEventListener("input", checkForm);
+        wardInput.addEventListener("input", checkForm);
+
+        nextBtn.onclick = () => switchScreen(3);
+
+        /* CAPTURE */
+        cameraInput.onchange = e => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showLoader("Processing image...");
+
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = new Image();
+
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+
+                    const scale = 800 / img.width;
+                    canvas.width = 800;
+                    canvas.height = img.height * scale;
+
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    photoPreview.src = canvas.toDataURL("image/jpeg", 0.8);
+
+                    fillDetails();
+                    switchScreen(4);
+
+                    html2canvas(document.getElementById("finalCard"), { scale: 1.5, useCORS: true })
+                        .then(c => {
+                            finalImageData = c.toDataURL("image/jpeg", 0.9);
+                            document.getElementById("downloadBtn").disabled = false;
+                            document.getElementById("shareBtn").disabled = false;
+                            hideLoader();
+                            showToast("Image ready ✅");
+                        }).catch(() => {
+                            finalImageData = photoPreview.src;
+                            document.getElementById("downloadBtn").disabled = false;
+                            document.getElementById("shareBtn").disabled = false;
+                            hideLoader();
+                            showToast("Ready ✅");
+                        });
+                };
+
+                img.src = ev.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        };
+
+        /* DETAILS */
+        function cleanText(text) {
+            return text.trim().replace(/\s+/g, " ");
+        }
+
+        function fillDetails() {
+            const now = new Date();
+
+            const cleanName = cleanText(userNameInput.value);
+            const cleanWard = cleanText(wardInput.value);
+
+            document.getElementById("timeText").innerHTML =
+                `<i class="fa-regular fa-clock icon"></i>${now.toLocaleString()}`;
+
+            document.getElementById("nameText").innerHTML =
+                `<i class="fa-solid fa-user icon"></i>${cleanName}`;
+
+            document.getElementById("wardText").innerHTML =
+                `<i class="fa-solid fa-location-dot icon"></i>Ward: ${cleanWard}`;
+
+            document.getElementById("addressText").innerHTML =
+                `<i class="fa-solid fa-map-pin icon"></i>${addressText}`;
+        }
+
+        /* DOWNLOAD */
+        document.getElementById("downloadBtn").onclick = () => {
+            if (finalImageData) {
+                const a = document.createElement("a");
+                a.href = finalImageData;
+                a.download = "field.jpg";
+                a.click();
+                showToast("Downloaded");
+            } else {
+                showToast("No image");
+            }
+        };
+
+        /* SHARE */
+        document.getElementById("shareBtn").onclick = async () => {
+            showLoader("Preparing share...");
+
+            const cleanName = userNameInput.value.trim().replace(/\s+/g, " ");
+            const cleanWard = wardInput.value.trim().replace(/\s+/g, " ");
+            const text = `*${cleanName}*\nWard: ${cleanWard}\nhttps://maps.google.com/?q=${lat},${lon}`;
+
+            try {
+                const blob = await (await fetch(finalImageData)).blob();
+                const file = new File([blob], "field.jpg", { type: "image/jpeg" });
+
+                hideLoader();
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({ text, files: [file] });
+                    showToast("Shared successfully 🚀");
+                    setTimeout(resetApp, 800);
+                } else alert("Sharing not supported");
+            } catch (e) {
+                hideLoader();
+                alert("Could not share");
+            }
+        };
+
+        /* RESET */
+        function resetApp() {
+            finalImageData = "";
+            userNameInput.value = "";
+            wardInput.value = "";
+            photoPreview.src = "";
+            nextBtn.disabled = true;
+            document.getElementById("downloadBtn").disabled = true;
+            document.getElementById("shareBtn").disabled = true;
+
+            switchScreen(1);
+            setTimeout(() => {
+                showLoader("Refreshing location...");
+                navigator.geolocation.getCurrentPosition(async pos => {
+                    lat = pos.coords.latitude;
+                    lon = pos.coords.longitude;
+                    try {
+                        let res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                        let data = await res.json();
+                        addressText = data.display_name;
+                    } catch {
+                        addressText = "Address not found";
+                    }
+                    document.getElementById("addressDisplay").innerText = addressText;
+                    const addrPrev = document.getElementById("addressPreview");
+                    if (addrPrev) addrPrev.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${addressText}`;
+                    hideLoader();
+                    switchScreen(2);
+                }, () => {
+                    addressText = "Location denied";
+                    document.getElementById("addressDisplay").innerText = addressText;
+                    const addrPrev = document.getElementById("addressPreview");
+                    if (addrPrev) addrPrev.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${addressText}`;
+                    hideLoader();
+                    switchScreen(2);
+                });
+            }, 300);
+            showToast("Ready for next capture 📸");
+        }
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("sw.js")
+                .then(() => console.log("SW registered"));
+        }
+        navigator.serviceWorker.getRegistrations().then(regs => {
+            for (let reg of regs) {
+                reg.update();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
