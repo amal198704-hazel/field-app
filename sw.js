@@ -1,11 +1,11 @@
-self.addEventListener("install", e => {
+/* ⭐ SAFE SERVICE WORKER FOR MAP + PWA */
+
+self.addEventListener("install", () => {
     self.skipWaiting();
 });
 
-self.addEventListener("activate", e => {
+self.addEventListener("activate", () => {
     self.clients.claim();
 });
 
-self.addEventListener("fetch", event => {
-    event.respondWith(fetch(event.request));
-});
+/* DO NOT INTERCEPT NETWORK REQUESTS */
