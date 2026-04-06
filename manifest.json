@@ -1,6 +1,6 @@
 {
-    "name": "Life App",
-    "short_name": "LifeApp",
+    "name": "HKS Attendance App",
+    "short_name": "Attendance",
     "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#ffffff",
